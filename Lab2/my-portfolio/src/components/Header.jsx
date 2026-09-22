@@ -4,7 +4,7 @@ function Header() {
     return (
         <header className="header-card">
             <img
-                src = "/myPhoto.jpg" 
+                src = "../assets/myPhoto.jpg" 
                 alt = "myPhoto" 
                 className = "profile-img"
                 />
