@@ -1,10 +1,11 @@
 import React from 'react';
+import myPhoto from '../assets/myPhoto.jpg';
 
 function Header() {
     return (
         <header className="header-card">
             <img
-                src = "../assets/myPhoto.jpg" 
+                src = {myPhoto}
                 alt = "myPhoto" 
                 className = "profile-img"
                 />

@@ -135,3 +135,67 @@ document.getElementById("btn-compare").addEventListener("click", async () => {
    Объяснение: Все задачи стартуют одновременно (Время = MAX(T1, T2, T3)).`;
 });
 
+
+// 3. EVENT LOOP & MICROTASKS DEMO
+
+document.getElementById("btn-event-loop").addEventListener("click", () => {
+  const consoleOutput = document.getElementById("console-output");
+  const explanation = document.getElementById("event-loop-explanation");
+  
+  let logs = [];
+  function customLog(msg) {
+    logs.push(msg);
+  }
+
+  // Demonstration Code
+  customLog("1: Sync Start");
+
+  // Таймауты (Macrotask Queue)
+  setTimeout(() => {
+    customLog("6: Macrotask 1 (setTimeout 0ms)");
+    consoleOutput.textContent = logs.join("\n");
+  }, 0);
+
+  setTimeout(() => {
+    customLog("7: Macrotask 2 (setTimeout 100ms)");
+    consoleOutput.textContent = logs.join("\n");
+  }, 100);
+
+  // Promises
+  Promise.resolve().then(() => {
+    customLog("3: Microtask 1 (Promise)");
+    consoleOutput.textContent = logs.join("\n");
+  });
+
+  // Async
+  async function asyncDemo() {
+    customLog("4: Async/Await (Microtask)");
+    consoleOutput.textContent = logs.join("\n");
+  }
+  
+  Promise.resolve().then(() => {
+    asyncDemo();
+  });
+
+  Promise.resolve().then(() => {
+    customLog("5: Microtask 2 (Promise)");
+    consoleOutput.textContent = logs.join("\n");
+  });
+
+  customLog("2: Sync End");
+  consoleOutput.textContent = logs.join("\n");
+
+  // Пояснение очереди
+  explanation.innerHTML = `
+    <br>
+    <strong>Как это сработало:</strong>
+    <ol>
+      <li><strong>Call Stack:</strong> Сначала синхронно выполнились код строки <code>1: Sync Start</code> и <code>2: Sync End</code>.</li>
+      <li><strong>Microtask Queue:</strong> После очистки Call Stack Event Loop проверяет очередь микрозадач. Выполняются все Promise и async/await (строки 3, 4, 5).</li>
+      <li><strong>Task Queue (Macrotasks):</strong> В последнюю очередь Event Loop берет макрозадачи из <code>setTimeout</code> (строки 6 и 7).</li>
+    </ol>
+  `;
+});
+
+// Инициализация при загрузке страницы
+updateUI();
