@@ -8,8 +8,8 @@ function About(){
         Hello! I am a 4th-year student of the «Information Systems» specialty. 
         I am interested in network security and computers.
       </p>
-      <h3>My Skills</h3>
-      <ul>
+      <h3 >My Skills</h3>
+      <ul className="contact-list">
         <li>Building PCs</li>
         <li>Network Security</li>
         <li>Python</li>

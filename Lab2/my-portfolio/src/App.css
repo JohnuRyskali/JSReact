@@ -83,3 +83,8 @@ footer {
   font-size: 0.9rem;
   margin-top: 1rem;
 }
+
+.contact-list{
+  list-style: none;
+  
+}
