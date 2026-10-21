@@ -23,30 +23,28 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
 
       # --- Сборка Лабораторной 3 ---
       - name: Build Lab 3
         run: |
-          cd Lab3 || cd lab3
-          npm ci || npm install
+          cd Lab3
+          npm install
           npm run build
 
       # --- Сборка Лабораторной 4 ---
       - name: Build Lab 4
         run: |
-          cd Lab4 || cd lab4
-          npm ci || npm install
+          cd Lab4
+          npm install
           npm run build
 
       # --- Собираем всё в одну общую папку public_html ---
       - name: Organize build output
         run: |
           mkdir -p public_html/lab3 public_html/lab4
-          if [ -d "Lab3/dist" ]; then cp -r Lab3/dist/* public_html/lab3/; fi
-          if [ -d "lab3/dist" ]; then cp -r lab3/dist/* public_html/lab3/; fi
-          if [ -d "Lab4/dist" ]; then cp -r Lab4/dist/* public_html/lab4/; fi
-          if [ -d "lab4/dist" ]; then cp -r lab4/dist/* public_html/lab4/; fi
+          cp -r Lab3/dist/* public_html/lab3/
+          cp -r Lab4/dist/* public_html/lab4/
 
       # --- Загружаем собранный артефакт для Pages ---
       - name: Upload artifact
