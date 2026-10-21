@@ -28,22 +28,20 @@ jobs:
       # --- Сборка Лабораторной 3 ---
       - name: Build Lab 3
         run: |
-          cd Lab3
+          cd Lab3/lab3
           npm install
           npm run build
 
-      # --- Сборка Лабораторной 4 ---
       - name: Build Lab 4
         run: |
           cd Lab4
           npm install
           npm run build
 
-      # --- Собираем всё в одну общую папку public_html ---
       - name: Organize build output
         run: |
           mkdir -p public_html/lab3 public_html/lab4
-          cp -r Lab3/dist/* public_html/lab3/
+          cp -r Lab3/lab3/dist/* public_html/lab3/
           cp -r Lab4/dist/* public_html/lab4/
 
       # --- Загружаем собранный артефакт для Pages ---
