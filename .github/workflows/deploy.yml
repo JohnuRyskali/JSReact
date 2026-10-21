@@ -2,13 +2,22 @@ name: Deploy Labs to GitHub Pages
 
 on:
   push:
-    branches: [ main ] # или master, в зависимости от того, как называется ваша главная ветка
+    branches: [ main ] # Укажите master, если ваша главная ветка называется master
+
+# Разрешения, необходимые для автоматического деплоя в GitHub Pages через Actions
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Отменяем параллельные запуск за запуск
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,7 +41,7 @@ jobs:
           npm install
           npm run build
 
-      # --- Подготовка структуры для деплоя ---
+      # --- Собираем всё в одну общую папку public_html ---
       - name: Organize build output
         run: |
           mkdir public_html
@@ -41,9 +50,19 @@ jobs:
           cp -r lab3/dist/* public_html/lab3/
           cp -r lab4/dist/* public_html/lab4/
 
-      # --- Деплой в ветку gh-pages ---
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # --- Загружаем собранный артефакт для Pages ---
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public_html
+          path: ./public_html
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
