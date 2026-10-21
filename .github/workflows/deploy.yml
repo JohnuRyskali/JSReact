@@ -1,0 +1,49 @@
+name: Deploy Labs to GitHub Pages
+
+on:
+  push:
+    branches: [ main ] # или master, в зависимости от того, как называется ваша главная ветка
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # --- Сборка Лабораторной 3 ---
+      - name: Build Lab 3
+        run: |
+          cd lab3
+          npm install
+          npm run build
+
+      # --- Сборка Лабораторной 4 ---
+      - name: Build Lab 4
+        run: |
+          cd lab4
+          npm install
+          npm run build
+
+      # --- Подготовка структуры для деплоя ---
+      - name: Organize build output
+        run: |
+          mkdir public_html
+          mkdir public_html/lab3
+          mkdir public_html/lab4
+          cp -r lab3/dist/* public_html/lab3/
+          cp -r lab4/dist/* public_html/lab4/
+
+      # --- Деплой в ветку gh-pages ---
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public_html
